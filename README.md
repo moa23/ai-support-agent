@@ -47,7 +47,7 @@ source .venv/bin/activate
 ### 3. Install dependencies
 
 ```bash
-python -m pip install fastapi uvicorn openai python-dotenv pytest httpx
+python -m pip install -r requirements.txt
 ```
 
 ### 4. Configure the API key
@@ -120,10 +120,10 @@ The tests mock the OpenAI API, allowing the suite to run without consuming API c
 
 ## Future Improvements
 
-- Add structured AI outputs for more reliable classification.
+- Use structured AI outputs for more reliable classification.
 - Add conversation history and follow-up questions.
-- Introduce logging, monitoring, and rate limiting.
-- Add integration tests and a CI/CD pipeline.
+- Introduce rate limiting and monitoring.
+- Add a CI/CD pipeline.
 - Deploy the application to a cloud platform.
 
 ## Project Status
