@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel, Field
+from typing import Literal
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,6 +30,19 @@ class SupportResponse(BaseModel):
     message: str
     response: str
     category: str
+    
+
+
+class AIClassification(BaseModel):
+    category: Literal[
+        "email",
+        "network",
+        "performance",
+        "account",
+        "general",
+    ]
+    response: str
+
 
 
 def categorize_request(message: str) -> tuple[str, str]:
@@ -58,50 +72,47 @@ def home():
 @app.post("/support", response_model=SupportResponse)
 def handle_support_request(request: SupportRequest):
     try:
-        ai_response = client.responses.create(
+        ai_response = client.responses.parse(
             model="gpt-4.1-mini",
-
-        instructions=(
-            "You are a professional IT support agent. "
-            "Respond in the same language as the user's message. "
-            "Classify the issue into exactly one category: "
-            "email, network, performance, account, or general. "
-            "Return your answer in this exact format:\n"
-            "CATEGORY: <category>\n"
-            "RESPONSE: <helpful troubleshooting response>\n"
-            "Give clear, numbered troubleshooting steps. "
-            "Start with the simplest and safest checks. "
-            "Ask a clarifying question if essential information is missing. "
-            "Never ask users to share passwords, API keys, or other secrets. "
-            "Never claim to have performed an action you have not performed. "
-            "Do not recommend disabling security controls or exposing sensitive data."
-        ),
-
+            text_format=AIClassification,
+            instructions=(
+                "You are a professional IT support agent. "
+                "Respond in the same language as the user's message. "
+                "Classify the issue into exactly one category: "
+                "email, network, performance, account, or general. "
+                "Give clear, numbered troubleshooting steps. "
+                "Start with the simplest and safest checks. "
+                "Ask a clarifying question if essential information is missing. "
+                "Never ask users to share passwords, API keys, or other secrets. "
+                "Never claim to have performed an action you have not performed. "
+                "Do not recommend disabling security controls or exposing sensitive data."
+            ),
             input=request.message,
         )
 
-        result = ai_response.output_text.strip()
+        parsed = ai_response.output_parsed
 
-        category = "general"
-        response = result
+        if parsed is None:
+            raise ValueError("OpenAI did not return structured output.")
 
-        for line in result.splitlines():
-            if line.upper().startswith("CATEGORY:"):
-                proposed_category = line.split(":", 1)[1].strip().lower()
-                allowed_categories = {
-                    "email", "network", "performance", "account", "general"
-                }
-                if proposed_category in allowed_categories:
-                    category = proposed_category
+        category = parsed.category
+        response = parsed.response
 
-        if "RESPONSE:" in result:
-            response = result.split("RESPONSE:", 1)[1].strip()
+        parsed = ai_response.output_parsed
+
+        if parsed is None:
+            raise ValueError("OpenAI did not return structured output.")
+
+        category = parsed.category
+        response = parsed.response
 
         return SupportResponse(
             message=request.message,
             response=response,
             category=category,
         )
+
+
 
     except Exception as e:
         logger.exception("OpenAI request failed")       
