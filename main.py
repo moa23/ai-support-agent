@@ -18,7 +18,9 @@ app = FastAPI(
     version="1.0.0",
 )
 
-client = OpenAI()
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY", "test-api-key")
+)
 
 class SupportRequest(BaseModel):
     message: str = Field(min_length=3, max_length=2000)
