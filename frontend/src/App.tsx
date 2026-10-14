@@ -28,7 +28,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/support", {
+      const response = await fetch("https://ai-support-agent-313288084160.europe-north1.run.app/support", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

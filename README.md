@@ -2,6 +2,33 @@
 
 An AI-powered IT support assistant built with **FastAPI, Python, React, TypeScript, and the OpenAI API**. The application analyzes IT support requests, classifies issues into predefined categories, and generates practical troubleshooting guidance through a web-based chat interface.
 
+## Live Demo
+
+**Try the application:** [AI Support Agent](https://ai-support-agent-313288084160.europe-north1.run.app)
+
+An AI-powered IT support assistant that classifies support requests and generates helpful responses using OpenAI.
+
+## Tech Stack
+
+- **Frontend:** React, TypeScript, Vite
+- **Backend:** Python, FastAPI
+- **AI:** OpenAI API with structured output for support classification
+- **Testing:** Pytest
+- **Containerization:** Docker
+- **Cloud deployment:** Google Cloud Run
+- **Secrets management:** Google Cloud Secret Manager
+- **API documentation:** Swagger UI / OpenAPI
+
+## Features
+
+- Accepts IT support requests through a web interface
+- Classifies requests into categories such as email, network, performance, account, and general
+- Generates AI-powered support responses
+- Validates incoming requests using Pydantic
+- Handles AI service errors with appropriate HTTP responses
+- Includes automated backend tests
+- Serves the React frontend and FastAPI backend from a single deployed service
+
 ## Features
 
 - **AI-powered troubleshooting:** Generates contextual, step-by-step guidance for IT support requests.
@@ -205,3 +232,71 @@ The generated production files are written to `frontend/dist/`.
 ## Project Status
 
 An actively developed portfolio project demonstrating practical AI integration, REST API development, automated testing, and frontend-backend integration.
+
+## Run Locally
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js and npm
+- An OpenAI API key
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/moa23/ai-support-agent.git
+cd ai-support-agent
+```
+
+### 2. Configure the backend
+
+Create and activate a Python virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the backend dependencies:
+
+```bash
+pip install -r requirements-prod.txt
+```
+
+Create a `.env` file in the project root and add your own API key:
+
+```env
+OPENAI_API_KEY=your-api-key-here
+```
+
+Never commit your `.env` file or expose your API key.
+
+### 3. Start the backend
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at `http://127.0.0.1:8000`.
+
+API documentation: `http://127.0.0.1:8000/docs`
+
+### 4. Start the frontend
+
+Open a second terminal:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+### 5. Run the tests
+
+From the project root, activate the virtual environment and run:
+
+```bash
+pytest -v
+```

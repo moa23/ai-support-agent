@@ -8,6 +8,8 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 from typing import Literal
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -59,6 +61,11 @@ class AIClassification(BaseModel):
 
 @app.get("/")
 def home():
+    frontend_index = os.path.join("static", "index.html")
+
+    if os.path.isfile(frontend_index):
+        return FileResponse(frontend_index)
+
     return {"status": "AI Support Agent is running"}
 
 
@@ -114,3 +121,11 @@ def handle_support_request(request: SupportRequest):
             status_code=502,
             detail="The AI support service is temporarily unavailable.",
         )
+        
+        
+if os.path.isdir("static"):
+    app.mount(
+        "/",
+        StaticFiles(directory="static", html=True),
+        name="frontend",
+    )
