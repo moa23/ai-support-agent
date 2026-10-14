@@ -45,22 +45,7 @@ class AIClassification(BaseModel):
 
 
 
-def categorize_request(message: str) -> tuple[str, str]:
-    text = message.lower()
 
-    if any(word in text for word in ["outlook", "email", "e-mail"]):
-        return "email", "Check your mailbox access."
-
-    if any(word in text for word in ["wi-fi", "wifi", "internet", "network"]):
-        return "network", "Check your network connection."
-
-    if any(word in text for word in ["slow", "slowly", "performance"]):
-        return "performance", "Check resource usage and restart if appropriate."
-
-    if any(word in text for word in ["password", "login", "sign in", "locked"]):
-        return "account", "Check your credentials and account status."
-
-    return "general", "Gather more information about the issue."
 
 
 @app.get("/")
