@@ -109,3 +109,19 @@ def test_message_too_long():
 def test_message_with_empty_string():
     response = client.post("/support", json={"message": ""})
     assert response.status_code == 422
+
+@patch("main.client.responses.parse")
+def test_missing_structured_output(mock_parse):
+    mock_response = Mock()
+    mock_response.output_parsed = None
+    mock_parse.return_value = mock_response
+
+    response = client.post(
+        "/support",
+        json={"message": "My computer is not working"},
+    )
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == (
+        "The AI support service is temporarily unavailable."
+    )
