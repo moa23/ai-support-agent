@@ -118,3 +118,7 @@ def test_message_too_long():
     )
 
     assert response.status_code == 422
+
+def test_message_with_empty_string():
+    response = client.post("/support", json={"message": ""})
+    assert response.status_code == 422
