@@ -8,6 +8,10 @@ An AI-powered IT support assistant built with **FastAPI, Python, React, TypeScri
 
 An AI-powered IT support assistant that classifies support requests and generates helpful responses using OpenAI.
 
+## Screenshot
+
+![AI Support Agent interface](ai-support-agent.png)
+
 ## Tech Stack
 
 - **Frontend:** React, TypeScript, Vite
