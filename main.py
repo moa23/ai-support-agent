@@ -1,10 +1,14 @@
 
 import os
+import logging
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel, Field
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -92,7 +96,7 @@ def handle_support_request(request: SupportRequest):
         )
 
     except Exception as e:
-        print(f"OpenAI error: {type(e).__name__}: {e}")
+        logger.exception("OpenAI request failed")       
         raise HTTPException(
             status_code=502,
             detail="The AI support service is temporarily unavailable.",
